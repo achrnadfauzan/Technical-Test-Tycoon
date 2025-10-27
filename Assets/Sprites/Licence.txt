@@ -1,0 +1,29 @@
+License for the "Town Tender - Asset pack":
+
+* Each license is valid on a per-purchaser basis. One license covers one studio or one individual.
+
+* Please keep this license alongside the assets for your reference.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+This product may be used:
+
+* As part of a game or interactive media.
+* As part of a piece of artwork, film, remix or collage, etc.
+* You have permission to edit the sprites as required for your commercial and non-commercial projects (as long as appropriate credit is still provided).
+
+
+Where this product may not be used:
+
+* Redistributed as an asset pack, in whole or in part.
+* Distributed in a raw format of assets. For example, if packaged alongside a game, please do not make these assets available to the public within an easily-accessed assets folder.
+* Under no circumstances may this asset pack be used in creating NFTs or otherwise interacting with blockchain technology.
+* The asset pack or the images created with it may not be used as part of an AI training set or alongside AI technology.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREDIT:
+
+Credit is necessary. Please use "Tetraminose" and [https://bsky.app/profile/tetraminose.bsky.social] for credit.
+
+
