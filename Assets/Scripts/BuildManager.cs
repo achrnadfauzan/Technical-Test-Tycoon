@@ -6,9 +6,6 @@ public class BuildManager : MonoBehaviour
 {
     public static BuildManager Instance { get; private set; }
 
-    [SerializeField] private GameObject buttonGroup;
-    [SerializeField] private GameObject hintTextObject;
-
     private StoreData selectedStoreToBuild;
     private int storeCount = 0;
 
@@ -57,7 +54,7 @@ public class BuildManager : MonoBehaviour
             {
                 DeselectStore();
                 storeCount++;
-                if (storeCount >= GridManager.Instance.GetGridCapacity()) buttonGroup.SetActive(false);
+                if (storeCount >= GridManager.Instance.GetGridCapacity()) GameUI.Instance.SetButtonGroupActive(false);
             }
 
             // If build failed, keep the store selected so the player can try clicking on a different, valid tile.
@@ -88,8 +85,8 @@ public class BuildManager : MonoBehaviour
         Debug.Log($"Selected: {selectedStoreToBuild.storeName}");
 
         // Hide buttons and show hint
-        buttonGroup.SetActive(false);
-        hintTextObject.SetActive(true);
+        GameUI.Instance.SetButtonGroupActive(false);
+        GameUI.Instance.SetHintTextActive(true);
     }
 
     // Reset the current store selection.
@@ -98,7 +95,7 @@ public class BuildManager : MonoBehaviour
         selectedStoreToBuild = null;
 
         // Show buttons and hide hint
-        buttonGroup.SetActive(true);
-        hintTextObject.SetActive(false);
+        GameUI.Instance.SetButtonGroupActive(true);
+        GameUI.Instance.SetHintTextActive(false);
     }
 }

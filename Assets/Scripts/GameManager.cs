@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 // Class for managing the game's economy (money and income).
@@ -10,9 +7,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private long currentMoney = 1000; // Start with some money
     [SerializeField] private long totalIncomePerSecond = 0;
-    [SerializeField] private TextMeshProUGUI moneyText;
-    [SerializeField] private TextMeshProUGUI incomeText;
-    [SerializeField] private StoreUIButton[] storeUIButtons;
+
+    private bool isGamePaused = false;
 
     private void Awake()
     {
@@ -30,22 +26,15 @@ public class GameManager : MonoBehaviour
         InvokeRepeating("AddMoney", 0, 1);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) PauseGame(!isGamePaused);
+    }
+
     private void AddMoney()
     {
         currentMoney += totalIncomePerSecond;
-        UpdateUI();
-    }
-
-    private void UpdateUI()
-    {
-        moneyText.text = $"$ {CurrencyUtility.CurrencyFormat(currentMoney)}";
-        incomeText.text = $"+ {CurrencyUtility.CurrencyFormat(totalIncomePerSecond)}/s";
-
-        // Set buttons interactable state based on currentMoney
-        foreach (var button in storeUIButtons)
-        {
-            button.SetButtonInteractable(currentMoney >= button.GetBuildCost());
-        }
+        GameUI.Instance.UpdateUI();
     }
 
     // Tries to spend money. Returns true if successful, false if not.
@@ -54,7 +43,7 @@ public class GameManager : MonoBehaviour
         if (currentMoney >= amount)
         {
             currentMoney -= amount;
-            UpdateUI();
+            GameUI.Instance.UpdateUI();
             return true;
         }
 
@@ -66,16 +55,23 @@ public class GameManager : MonoBehaviour
     public void AddIncome(int amount)
     {
         totalIncomePerSecond += amount;
-        UpdateUI();
+        GameUI.Instance.UpdateUI();
     }
 
     public long GetCurrentMoney()
     {
         return currentMoney;
     }
-    
+
     public long GetTotalIncome()
     {
         return totalIncomePerSecond;
+    }
+    
+    public void PauseGame(bool value)
+    {
+        isGamePaused = value;
+        GameUI.Instance.SetPausePanelActive(value);
+        Time.timeScale = value ? 0 : 1;
     }
 }
