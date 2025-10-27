@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // Class for managing the game's economy (money and income).
@@ -23,6 +24,14 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // Check if the SessionManager has data for us to load
+        GameData dataToLoad = SessionManager.Instance.ConsumeDataToLoad();
+
+        if (dataToLoad != null)
+        {
+            LoadGameData(dataToLoad);
+        }
+
         InvokeRepeating("AddMoney", 0, 1);
     }
 
@@ -31,10 +40,22 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) PauseGame(!isGamePaused);
     }
 
+    // called once every seconds
     private void AddMoney()
     {
         currentMoney += totalIncomePerSecond;
         GameUI.Instance.UpdateUI();
+
+        AchievementManager.Instance?.CheckMoneyAchievements(currentMoney);
+    }
+    
+    // Called when new store is built
+    public void AddIncome(int amount)
+    {
+        totalIncomePerSecond += amount;
+        GameUI.Instance.UpdateUI();
+
+        AchievementManager.Instance?.CheckIncomeAchievements(totalIncomePerSecond);
     }
 
     // Tries to spend money. Returns true if successful, false if not.
@@ -51,13 +72,6 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    // Called when new store is built
-    public void AddIncome(int amount)
-    {
-        totalIncomePerSecond += amount;
-        GameUI.Instance.UpdateUI();
-    }
-
     public long GetCurrentMoney()
     {
         return currentMoney;
@@ -67,11 +81,43 @@ public class GameManager : MonoBehaviour
     {
         return totalIncomePerSecond;
     }
-    
+
     public void PauseGame(bool value)
     {
         isGamePaused = value;
         GameUI.Instance.SetPausePanelActive(value);
         Time.timeScale = value ? 0 : 1;
+    }
+
+    public void ResetIncome()
+    {
+        totalIncomePerSecond = 0;
+    }
+
+    // gather all game's data from gameobjects for saving
+    public GameData GetCurrentGameData()
+    {
+        GameData data = new GameData();
+        data.currentMoney = currentMoney;
+        data.totalIncomePerSecond = totalIncomePerSecond;
+        data.lastSaveTime = DateTime.Now;
+
+        data.stores = GridManager.Instance.GetStoreSaveData();
+
+        return data;
+    }
+
+    // gather game data from file for loading
+    public void LoadGameData(GameData data)
+    {
+        currentMoney = data.currentMoney;
+        totalIncomePerSecond = data.totalIncomePerSecond;
+
+        GridManager.Instance.LoadStores(data.stores);
+
+        GameUI.Instance.UpdateUI();
+
+        AchievementManager.Instance?.CheckMoneyAchievements(currentMoney);
+        AchievementManager.Instance?.CheckIncomeAchievements(totalIncomePerSecond);
     }
 }
